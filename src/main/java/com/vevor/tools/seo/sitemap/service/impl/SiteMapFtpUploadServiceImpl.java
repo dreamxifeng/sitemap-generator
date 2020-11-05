@@ -92,8 +92,6 @@ public class SiteMapFtpUploadServiceImpl implements SiteMapFtpUploadService {
         //关闭连接
         loginSftpServer.logout();
         //删除本地文件
-        deleteFiles(sitemapFiles);
-        FileUtils.deleteQuietly(zipFiles);
         for (File sitemapFile : sitemapFiles) {
             try {
                 FileUtils.deleteQuietly (sitemapFile);
@@ -103,7 +101,7 @@ public class SiteMapFtpUploadServiceImpl implements SiteMapFtpUploadService {
                 e.printStackTrace();
             }
         }
-        return getStrings(fileUploadConfiguration, sitemapFiles, s, returnExist);
+        return getStrings(fileUploadConfiguration, sitemapFiles, s, returnExist,zipFiles);
     }
 
     /**
@@ -162,34 +160,38 @@ public class SiteMapFtpUploadServiceImpl implements SiteMapFtpUploadService {
         log.info("Remote server file is"+returnExist);
         //关闭连接
         loginSftpServer.logout();
-        //删除本地临时目录下生成的临时文件
-        deleteFiles(sitemapFiles);
-        return getStrings(fileUploadConfiguration, sitemapFiles, s, returnExist);
+        return getStrings(fileUploadConfiguration, sitemapFiles, s, returnExist,zipFiles);
     }
 
-    private List<String> getStrings(FileUploadConfiguration fileUploadConfiguration, List<File> sitemapFiles, String s, boolean returnExist) {
+    private List<String> getStrings(FileUploadConfiguration fileUploadConfiguration,
+                                    List<File> sitemapFiles, String s,
+                                    boolean returnExist,File zipFiles) {
         List<String> list = new ArrayList<>();
         if (returnExist && !fileUploadConfiguration.getIsIndexGenerator()){
             list.add( sitemapFiles.iterator().next().getName()) ;
+            deleteFiles(sitemapFiles,zipFiles);
             return list;
         }
         if (returnExist && fileUploadConfiguration.getIsIndexGenerator()){
+            deleteFiles(sitemapFiles,zipFiles);
             list.add(s);
             return list;
         }
+        deleteFiles(sitemapFiles,zipFiles);
         return null;
     }
 
-    public void deleteFiles(List<File> sitemapFiles){
+    public void deleteFiles(List<File> sitemapFiles,File zipFile){
         //删除本地临时目录下生成的临时文件
         for (File sitemapFile : sitemapFiles) {
             try {
                 FileUtils.deleteQuietly (sitemapFile);
-                log.info("localhost file delete success ");
             } catch (Exception e) {
                 log.info("localhost file delete fail ");
                 e.printStackTrace();
             }
         }
+        FileUtils.deleteQuietly(zipFile);
+        log.info("localhost file delete success ");
     }
 }

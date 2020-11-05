@@ -106,8 +106,6 @@ public class RobotUploadServiceImpl implements RobotUploadService {
         return true;
     }
 
-
-
     /**
      * scp命令上传robot文件
      *
@@ -152,6 +150,9 @@ public class RobotUploadServiceImpl implements RobotUploadService {
             string.append("rm -f ").append(str).append("\n");
         }
         //1切换到压缩包目录里，2.删除压缩包内与服务器相同的文件，3.解压压缩包，4删除压缩包
+        //先解压文件，如果本身就有压缩包内相同名称的文件，
+        // linux会让输入一次y/n,多次拼接回车与y,时不时会发生程序卡住,由于是远程，也不清楚远程那边执行是什么情况。
+        //时间有限就没去远程测试，于是就提前执行删除命令，有或没有，都不会有二次手动输入。后来分析流程也是合理的.
         String s = "cd " + uploadConfigVO.getRobotFilePath() + "\n"
                 + string
                 + "unzip " + fileName +"\n"

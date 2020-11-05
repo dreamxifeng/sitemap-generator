@@ -1,12 +1,15 @@
+# Getting Started
 ### SEO优化
-
-维护注意事项:
-1. 版本升级必须要兼容低版本, 过期的内容使用注解标识出来;
-2. 更新内容必须升级版本号;
-3. 项目的打包类型为pom, 该项目内部可以分别创建公共module, 每个单独的module的打包方式都应该是jar, 每个module都应该按照“低耦合,高内聚”的原则进行开发
-
-Seo优化模块注意事项:
+运行环境:   jdk,mysql,此项目利用consul配置全局配置类,
+    *-可选择在application.xml/yml配置sitemap对象参数
+    | 维护注意事项:
+    |1. 版本升级必须要兼容低版本, 过期的内容使用注解标识出来;
+    | 2. 更新内容必须升级版本号;
+    |3. 项目的打包类型为pom, 该项目内部可以分别创建公共module, 每个单独的module的打包方式都应该是jar, 每个module都应该按照“低耦合,高内聚”的原则进行开发
+    *
+**Seo优化模块注意事项:**
 1.全局参数配置类: FileUploadConfiguration   配置方式读取属性值
+
         配置文件参考:    sitemap 与 spring 属性配置同级
         1.consul注册中心内 用于全局consul配置中心进行统一配置   
         ------------------------------------------- 
@@ -30,7 +33,7 @@ Seo优化模块注意事项:
         | spring.datasource.url=jdbc:mysql:.....  |
         -------------------------------------------  
     
-2.sitemap.xml生成源于开源工具 https://github.com/dfabulich/sitemapgen4j/releases
+**2.sitemap.xml生成源于开源工具** https://github.com/dfabulich/sitemapgen4j/releases
        （此模块进行自定义重写另外业务若需重写,所有类修饰符已为public,模仿SitemapGenerator与SitemapIndexUrl 修改即可）
         sitemap.xml 生成须知: 
         -------------------------------------------------------------------------------------
@@ -42,7 +45,7 @@ Seo优化模块注意事项:
                     即:  ”http://www.vevor.com“  相同 。其他域名同理
         -------------------------------------------------------------------------------------     
         
-3.FileUploadConfiguration.privateKey 本地私钥:SSH非对称加密 ->  
+**3.FileUploadConfiguration.privateKey 本地私钥:SSH非对称加密 ->**  
         需服务器开启ssh:
         +——————————————————————————+——————————————————————————+——————————————————————————————————-—--——+
         | 确定虚拟机已经安装openssh-server,在终端输入yum list installed | grep openssh-server                |
@@ -62,7 +65,7 @@ Seo优化模块注意事项:
             作者：TopGun_Viper     來源：简书
             链接：https://www.jianshu.com/p/33461b619d53
                      
-4.sitemap.xml生成:
+**4.sitemap.xml生成:**
         sitemap 文件名: 默认生成 sitemap.xml。
         自定义文件名称由 SiteMapInfoVO.pageTypeName属性替换
         url.length> 50000时 自动生成多文件 例如:sitemap1.xml,sitemap2.xml....以此类推
@@ -73,13 +76,15 @@ Seo优化模块注意事项:
         标签内 hreflang 为站点或服务器域名 或国家所使用的语言:  格式自主配置: 
         推荐 "{站点所用语种}-{站点国家简写}"  例如:  "en-au" 表明:英语-欧洲
         
-5.robots.txt生成:
+**5.robots.txt生成:**
         以字符串方式直接写入 服务器自主配置路径下 ；保存为自主配置:   文件名.txt    ；  
         数据库文本内容格式:保存回车，Tab,空格等可见字符
         前端text内值，js保存格式即可。显示视情况对值进行转换。回车->   <br>
         相关可见字符js转换方式可参考文章:
             https://blog.csdn.net/u012606532/article/details/77802535
-6.ScpUtils 类:
-        提供scp文件上传，文件解压。        
+            
+**6.ScpUtils 类:**
+        提供scp文件上传，文件解压。     
+                  
 -------------------------------------------------------------------------------------------        
  
