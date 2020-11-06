@@ -56,7 +56,7 @@ public class SiteMapGeneratorServiceImpl implements SiteMapGeneratorService {
                 key = infoConfigImageUrl.get(i).split(",")[0];
                 Map<String, Map<String,String>>map  = new HashMap<>(1);
                 Map<String, String>map1=new HashMap<>(2);
-                map1.put("hreflang",uploadConfigVo.getLanguage());
+                map1.put("hreflang",seoInfoConfig.getLanguage());
                 map1.put("href",key);
                 map.put(seoInfoConfig.getImageUrl().get(i),map1);
                 GoogleImageSitemapUrl url =
@@ -99,7 +99,7 @@ public class SiteMapGeneratorServiceImpl implements SiteMapGeneratorService {
             for (int i = 0; i <seoInfoConfig.getUrls().size(); i++) {
                 Map<String, Map<String,String>>map  = new HashMap<>(1);
                 Map<String, String>map1=new HashMap<>(2);
-                map1.put("hreflang",uploadConfigVo.getLanguage());
+                map1.put("hreflang",seoInfoConfig.getLanguage());
                 map1.put("href",seoInfoConfig.getUrls().get(i));
                 map.put(seoInfoConfig.getUrls().get(i),map1);
                 GoogleNoImageSitemapUrl url =

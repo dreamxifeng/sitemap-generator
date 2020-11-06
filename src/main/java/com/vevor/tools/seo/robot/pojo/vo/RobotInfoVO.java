@@ -16,6 +16,11 @@ import lombok.Data;
 public class RobotInfoVO {
 
     /**
+     * 服务器地址
+     */
+    private String ip;
+
+    /**
      * robot配置表中content内容与sitemap表中content内容拼接后的内容
      */
     private String content;

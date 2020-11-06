@@ -5,6 +5,7 @@ package com.vevor.tools.seo.untils;
 
 import com.jcraft.jsch.*;
 import com.vevor.tools.seo.config.FileUploadConfiguration;
+import com.vevor.tools.seo.sitemap.pojo.vo.SiteMapInfoVO;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
@@ -173,14 +174,15 @@ public class FtpFileUtils {
      * @param uploadConfigVO 配置参数
      * @throws JSchException 异常
      */
-    public void unzip(FileUploadConfiguration uploadConfigVO, String fileName,List<File> sitemapFiles) throws JSchException,
+    public void unzip(FileUploadConfiguration uploadConfigVO, String fileName, List<File> sitemapFiles,
+                      SiteMapInfoVO siteMapInfoVO) throws JSchException,
             IOException {
         JSch jSch = new JSch();
         List<String> list = new ArrayList<>();
         list.add( sitemapFiles.iterator().next().getName()) ;
         String sshKeyPath = System.getProperty("user.home") + "/.ssh/id_rsa";
         jSch.addIdentity(sshKeyPath);
-        Session session = jSch.getSession(uploadConfigVO.getUsername(), uploadConfigVO.getIp(), uploadConfigVO.getPort());
+        Session session = jSch.getSession(uploadConfigVO.getUsername(), siteMapInfoVO.getIp(), uploadConfigVO.getPort());
         session.setConfig("StrictHostKeyChecking","no");
         session.setTimeout(1000);
         session.connect();

@@ -61,7 +61,7 @@ public class ScpSiteMapZipImpl implements SiteMapScpUploadService {
                 e.printStackTrace();
             }
         }
-        return  getList(sitemapFiles,uploadConfigVo);
+        return  getList(sitemapFiles,uploadConfigVo,seoInfoConfig);
     }
 
     /**
@@ -85,11 +85,11 @@ public class ScpSiteMapZipImpl implements SiteMapScpUploadService {
                 e.printStackTrace();
             }
         }
-        return  getList(sitemapFiles,uploadConfigVo);
+        return  getList(sitemapFiles,uploadConfigVo,seoInfoConfig);
     }
 
     private List<String> getList(List<File> sitemapFiles,
-                                 FileUploadConfiguration uploadConfigVo){
+                                 FileUploadConfiguration uploadConfigVo,SiteMapInfoVO siteMapInfoVO){
         //压缩文件
         File zipPath = zipFiles(sitemapFiles);
         List<String> list = new ArrayList<>();
@@ -97,7 +97,7 @@ public class ScpSiteMapZipImpl implements SiteMapScpUploadService {
         log.info("compressed File Path:"+zipPath.getPath());
         //上传文件
         try {
-            siteMapScpUpload(zipPath.getPath(),uploadConfigVo);
+            siteMapScpUpload(zipPath.getPath(),uploadConfigVo,siteMapInfoVO);
             log.info("file Uploaded Successfully");
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
@@ -105,7 +105,7 @@ public class ScpSiteMapZipImpl implements SiteMapScpUploadService {
         log.info("The compressed package was uploaded to the server successfully");
         //解压文件
         try {
-            unzip(uploadConfigVo,zipPath.getName(),list);
+            unzip(uploadConfigVo,zipPath.getName(),list,siteMapInfoVO);
         } catch (JSchException e) {
             e.printStackTrace();
         }
@@ -125,9 +125,10 @@ public class ScpSiteMapZipImpl implements SiteMapScpUploadService {
      * @throws InterruptedException 异常
      */
     public void siteMapScpUpload(String path,
-                                 FileUploadConfiguration fileUploadConfiguration) throws IOException,InterruptedException {
+                                 FileUploadConfiguration fileUploadConfiguration,SiteMapInfoVO siteMapInfoVO) throws IOException,
+            InterruptedException {
         Process process = Runtime.getRuntime().exec("scp -r "+path
-                + " "+fileUploadConfiguration.getUsername()+"@"+fileUploadConfiguration.getIp()+":"+ fileUploadConfiguration.getSiteMapFilePath());
+                + " "+fileUploadConfiguration.getUsername()+"@"+siteMapInfoVO.getIp()+":"+ fileUploadConfiguration.getSiteMapFilePath());
         InputStream errorStream = process.getErrorStream();
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(errorStream));
         String line;
@@ -147,11 +148,11 @@ public class ScpSiteMapZipImpl implements SiteMapScpUploadService {
      * @param uploadConfigVO 配置参数
      * @throws JSchException 异常
      */
-    public void unzip(FileUploadConfiguration uploadConfigVO, String fileName,List<String>list) throws JSchException {
+    public void unzip(FileUploadConfiguration uploadConfigVO, String fileName,List<String>list,SiteMapInfoVO siteMapInfoVO) throws JSchException {
         JSch jSch = new JSch();
         String sshKeyPath = System.getProperty("user.home") + "/.ssh/id_rsa";
         jSch.addIdentity(sshKeyPath);
-        Session session = jSch.getSession(uploadConfigVO.getUsername(), uploadConfigVO.getIp(), uploadConfigVO.getPort());
+        Session session = jSch.getSession(uploadConfigVO.getUsername(), siteMapInfoVO.getIp(), uploadConfigVO.getPort());
         session.setConfig("StrictHostKeyChecking","no");
         session.connect();
         ChannelExec exec = (ChannelExec) session.openChannel("exec");

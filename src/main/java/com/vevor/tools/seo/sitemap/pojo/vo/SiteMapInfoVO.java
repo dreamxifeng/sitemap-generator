@@ -18,6 +18,16 @@ import java.util.LinkedList;
 public class SiteMapInfoVO {
 
     /**
+     * 服务器地址
+     */
+    private String ip;
+
+    /**
+     * siteMap域名地址所属语种
+     */
+    private String language;
+
+    /**
      * url所属页面类型名称，决定sitemap的生成文件名
      */
     private String pageTypeName;

@@ -22,11 +22,6 @@ import org.springframework.context.annotation.Configuration;
 public class FileUploadConfiguration {
 
     /**
-     * 服务器地址
-     */
-    private String ip;
-
-    /**
      * 服务器地址开放端口
      */
     private  Integer port;
@@ -35,11 +30,6 @@ public class FileUploadConfiguration {
      * 服务器用户
      */
     private String username;
-
-    /**
-     * 服务器用户密码
-     */
-    private String password;
 
     /**
      *本地服务器文件生成路径：暂不用

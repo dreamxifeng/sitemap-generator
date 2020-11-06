@@ -45,7 +45,7 @@ public class RobotUploadServiceImpl implements RobotUploadService {
         LoginSftpServer loginSftpServer = new LoginSftpServer();
         FtpFileUtils ftpFileUtils = new FtpFileUtils();
         //创建连接
-        ChannelSftp sftp = loginSftpServer.login(fileUploadConfiguration.getUsername(), fileUploadConfiguration.getIp(),
+        ChannelSftp sftp = loginSftpServer.login(fileUploadConfiguration.getUsername(), robotInfoVO.getIp(),
                 fileUploadConfiguration.getPort(), fileUploadConfiguration.getPrivateKey());
         //判断文件是否存在 存在则删除
         boolean exist = ftpFileUtils.isExist(
@@ -91,7 +91,7 @@ public class RobotUploadServiceImpl implements RobotUploadService {
         File zipFiles = zipFiles(files);
         //上传
         try {
-            scpUploadFile(zipFiles.getPath(),fileUploadConfiguration);
+            scpUploadFile(zipFiles.getPath(),fileUploadConfiguration,robotInfoVO);
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
@@ -99,7 +99,7 @@ public class RobotUploadServiceImpl implements RobotUploadService {
         list.add(files.iterator().next().getName());
         // 解压
         try {
-            unzip(fileUploadConfiguration,zipFiles.getName(),list);
+            unzip(fileUploadConfiguration,zipFiles.getName(),list,robotInfoVO);
         } catch (JSchException e) {
             e.printStackTrace();
         }
@@ -113,10 +113,10 @@ public class RobotUploadServiceImpl implements RobotUploadService {
      * @throws IOException 异常
      * @throws InterruptedException 异常
      */
-    public void scpUploadFile(String path, FileUploadConfiguration uploadConfigVO) throws IOException,
+    public void scpUploadFile(String path, FileUploadConfiguration uploadConfigVO,RobotInfoVO robotInfoVO) throws IOException,
             InterruptedException {
         Process process = Runtime.getRuntime().exec("scp -r "+path
-                + " "+uploadConfigVO.getUsername()+"@"+uploadConfigVO.getIp()+":/"+uploadConfigVO.getRobotFilePath());
+                + " "+uploadConfigVO.getUsername()+"@"+robotInfoVO.getIp()+":/"+uploadConfigVO.getRobotFilePath());
         InputStream errorStream = process.getErrorStream();
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(errorStream));
         String line;
@@ -137,11 +137,11 @@ public class RobotUploadServiceImpl implements RobotUploadService {
      * @param uploadConfigVO 配置参数
      * @throws JSchException 异常
      */
-    public void unzip(FileUploadConfiguration uploadConfigVO,String fileName,List<String> list) throws  JSchException {
+    public void unzip(FileUploadConfiguration uploadConfigVO,String fileName,List<String> list,RobotInfoVO robotInfoVO) throws  JSchException {
         JSch jSch = new JSch();
         String sshKeyPath = System.getProperty("user.home") + "/.ssh/id_rsa";
         jSch.addIdentity(sshKeyPath);
-        Session session = jSch.getSession(uploadConfigVO.getUsername(), uploadConfigVO.getIp(), uploadConfigVO.getPort());
+        Session session = jSch.getSession(uploadConfigVO.getUsername(), robotInfoVO.getIp(), uploadConfigVO.getPort());
         session.setConfig("StrictHostKeyChecking","no");
         session.connect();
         ChannelExec exec = (ChannelExec) session.openChannel("exec");

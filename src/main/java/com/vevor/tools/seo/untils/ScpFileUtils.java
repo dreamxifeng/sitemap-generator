@@ -8,6 +8,7 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import com.vevor.tools.seo.config.FileUploadConfiguration;
+import com.vevor.tools.seo.sitemap.pojo.vo.SiteMapInfoVO;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
@@ -57,11 +58,11 @@ public class ScpFileUtils {
      * @param command 执行命令行
      * @throws JSchException 异常
      */
-    public void unzip(FileUploadConfiguration uploadConfigVO,String command) throws  JSchException {
+    public void unzip(FileUploadConfiguration uploadConfigVO, String command, SiteMapInfoVO siteMapInfoVO) throws  JSchException {
         JSch jSch = new JSch();
         String sshKeyPath = System.getProperty("user.home") + "/.ssh/id_rsa";
         jSch.addIdentity(sshKeyPath);
-        Session session = jSch.getSession(uploadConfigVO.getUsername(), uploadConfigVO.getIp(), uploadConfigVO.getPort());
+        Session session = jSch.getSession(uploadConfigVO.getUsername(), siteMapInfoVO.getIp(), uploadConfigVO.getPort());
         session.setConfig("StrictHostKeyChecking","no");
         session.connect();
         ChannelExec exec = (ChannelExec) session.openChannel("exec");

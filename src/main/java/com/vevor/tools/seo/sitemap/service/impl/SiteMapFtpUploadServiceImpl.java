@@ -66,7 +66,7 @@ public class SiteMapFtpUploadServiceImpl implements SiteMapFtpUploadService {
         LoginSftpServer loginSftpServer = new LoginSftpServer();
         FtpFileUtils ftpFileUtils = new FtpFileUtils();
         //创建连接
-        ChannelSftp sftp = loginSftpServer.login(fileUploadConfiguration.getUsername(), fileUploadConfiguration.getIp(),
+        ChannelSftp sftp = loginSftpServer.login(fileUploadConfiguration.getUsername(), siteMapInfoVO.getIp(),
                 fileUploadConfiguration.getPort(), fileUploadConfiguration.getPrivateKey());
         //生成路径
         ftpFileUtils.createDir(fileUploadConfiguration.getSiteMapFilePath(),sftp);
@@ -78,7 +78,7 @@ public class SiteMapFtpUploadServiceImpl implements SiteMapFtpUploadService {
         //删除远程服务器压缩文件
         try {
             try {
-                ftpFileUtils.unzip(fileUploadConfiguration,zipFiles.getName(),sitemapFiles);
+                ftpFileUtils.unzip(fileUploadConfiguration,zipFiles.getName(),sitemapFiles,siteMapInfoVO);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -135,7 +135,7 @@ public class SiteMapFtpUploadServiceImpl implements SiteMapFtpUploadService {
         LoginSftpServer loginSftpServer = new LoginSftpServer();
         FtpFileUtils ftpFileUtils = new FtpFileUtils();
         //创建连接
-        ChannelSftp sftp = loginSftpServer.login(fileUploadConfiguration.getUsername(), fileUploadConfiguration.getIp(),
+        ChannelSftp sftp = loginSftpServer.login(fileUploadConfiguration.getUsername(), siteMapInfoVO.getIp(),
                 fileUploadConfiguration.getPort(), fileUploadConfiguration.getPrivateKey());
         //生成路径
         ftpFileUtils.createDir(fileUploadConfiguration.getSiteMapFilePath(),sftp);
@@ -147,7 +147,7 @@ public class SiteMapFtpUploadServiceImpl implements SiteMapFtpUploadService {
         //删除远程服务器压缩文件
         try {
             try {
-                ftpFileUtils.unzip(fileUploadConfiguration,zipFiles.getName(),sitemapFiles);
+                ftpFileUtils.unzip(fileUploadConfiguration,zipFiles.getName(),sitemapFiles,siteMapInfoVO);
             } catch (IOException e) {
                 e.printStackTrace();
             }
