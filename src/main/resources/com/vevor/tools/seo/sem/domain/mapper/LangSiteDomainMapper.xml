@@ -1,0 +1,443 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vevor.tools.seo.sem.domain.mapper.LangSiteDomainMapper">
+
+    <resultMap id="BaseResultMap" type="com.vevor.tools.seo.sem.domain.dataobject.LangSiteDomainDO">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="lang" column="lang" jdbcType="INTEGER"/>
+        <result property="website" column="website" jdbcType="VARCHAR"/>
+        <result property="terminal" column="terminal" jdbcType="INTEGER"/>
+        <result property="domainName" column="domain_name" jdbcType="VARCHAR"/>
+        <result property="domainIp" column="domain_ip" jdbcType="VARCHAR"/>
+        <result property="createdBy" column="created_by" jdbcType="INTEGER"/>
+        <result property="createdTime" column="created_time" jdbcType="TIMESTAMP"/>
+        <result property="updatedBy" column="updated_by" jdbcType="INTEGER"/>
+        <result property="updatedTime" column="updated_time" jdbcType="TIMESTAMP"/>
+        <result property="delete" column="is_delete" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="BaseColumn">
+             `id`,
+            `lang`,
+            `website`,
+            `terminal`,
+            `domain_name`,
+            `domain_ip`,
+            `created_by`,
+            `created_time`,
+            `updated_by`,
+            `updated_time`,
+            `is_delete`
+    </sql>
+
+    <!--查询单个对象-->
+    <select id="queryById" resultMap="BaseResultMap">
+        select
+            <include refid="BaseColumn"/>
+        from `seo_lang_site_domain`
+        where `id` = #{id} and `is_delete` = 0
+    </select>
+
+    <!--通过ID集合查询多条数据-->
+    <select id="queryByIds" resultMap="BaseResultMap">
+       select
+           <include refid="BaseColumn"/>
+       from `seo_lang_site_domain`
+       <where>
+           <choose>
+           		<when test="ids != null and ids.size > 0">
+            		`id` in
+            		<foreach collection="ids" item="id" open="(" close=")" separator=",">
+             	 		#{id}
+            		</foreach>
+					and `is_delete` = 0
+           		</when>
+           		<otherwise>
+           			1 != 1
+           		</otherwise>
+           </choose>
+       </where>
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="BaseResultMap">
+        select
+            <include refid="BaseColumn"/>
+        from `seo_lang_site_domain`
+        <where>
+        <if test="id != null">
+                and `id` = #{id}
+            </if>
+            <if test="lang != null">
+                and `lang` = #{lang}
+            </if>
+            <if test="website != null and website != ''">
+                and `website` = #{website}
+            </if>
+            <if test="terminal != null">
+                and `terminal` = #{terminal}
+            </if>
+            <if test="domainName != null and domainName != ''">
+                and `domain_name` = #{domainName}
+            </if>
+            <if test="domainIp != null and domainIp != ''">
+                and `domain_ip` = #{domainIp}
+            </if>
+            <if test="createdBy != null">
+                and `created_by` = #{createdBy}
+            </if>
+            <if test="createdTime != null">
+                and `created_time` = #{createdTime}
+            </if>
+            <if test="updatedBy != null">
+                and `updated_by` = #{updatedBy}
+            </if>
+            <if test="updatedTime != null">
+                and `updated_time` = #{updatedTime}
+            </if>
+                and `is_delete` = 0
+        </where>
+    </select>
+
+    <!--新增可选列-->
+    <insert id="insertSelective" keyProperty="id" useGeneratedKeys="true">
+     insert into `seo_lang_site_domain`
+         <trim prefix="(" suffix=")" suffixOverrides=",">
+             <if test="id != null">
+                `id`,
+            </if>
+      		  <if test="lang != null">
+                `lang`,
+            </if>
+      		  <if test="website != null and website != ''">
+                `website`,
+            </if>
+      		  <if test="terminal != null">
+                `terminal`,
+            </if>
+      		  <if test="domainName != null and domainName != ''">
+                `domain_name`,
+            </if>
+      		  <if test="domainIp != null and domainIp != ''">
+                `domain_ip`,
+            </if>
+      		  <if test="createdBy != null">
+                `created_by`,
+            </if>
+      		  <if test="createdTime != null">
+                `created_time`,
+            </if>
+      		  <if test="updatedBy != null">
+                `updated_by`,
+            </if>
+      		  <if test="updatedTime != null">
+                `updated_time`,
+            </if>
+      		  <if test="delete != null">
+                `is_delete`,
+            </if>
+         </trim>
+         <trim prefix="values (" suffix=")" suffixOverrides=",">
+             <if test="id != null">
+                #{id},
+            </if>
+      		  <if test="lang != null">
+                #{lang},
+            </if>
+      		  <if test="website != null and website != ''">
+                #{website},
+            </if>
+      		  <if test="terminal != null">
+                #{terminal},
+            </if>
+      		  <if test="domainName != null and domainName != ''">
+                #{domainName},
+            </if>
+      		  <if test="domainIp != null and domainIp != ''">
+                #{domainIp},
+            </if>
+      		  <if test="createdBy != null">
+                #{createdBy},
+            </if>
+      		  <if test="createdTime != null">
+                #{createdTime},
+            </if>
+      		  <if test="updatedBy != null">
+                #{updatedBy},
+            </if>
+      		  <if test="updatedTime != null">
+                #{updatedTime},
+            </if>
+      		  <if test="delete != null">
+                #{delete},
+            </if>
+         </trim>
+    </insert>
+
+       <!--批量新增数据-->
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+   		<if test="dataObjectList != null and dataObjectList.size > 0">
+			<foreach collection="dataObjectList" item="dataObject" separator=";">
+	        insert into `seo_lang_site_domain`
+         <trim prefix="(" suffix=")" suffixOverrides=",">
+             <if test="dataObject.id != null">
+                `id`,
+            </if>
+      		  <if test="dataObject.lang != null">
+                `lang`,
+            </if>
+      		  <if test="dataObject.website != null and dataObject.website != ''">
+                `website`,
+            </if>
+      		  <if test="dataObject.terminal != null">
+                `terminal`,
+            </if>
+      		  <if test="dataObject.domainName != null and dataObject.domainName != ''">
+                `domain_name`,
+            </if>
+      		  <if test="dataObject.domainIp != null and dataObject.domainIp != ''">
+                `domain_ip`,
+            </if>
+      		  <if test="dataObject.createdBy != null">
+                `created_by`,
+            </if>
+      		  <if test="dataObject.createdTime != null">
+                `created_time`,
+            </if>
+      		  <if test="dataObject.updatedBy != null">
+                `updated_by`,
+            </if>
+      		  <if test="dataObject.updatedTime != null">
+                `updated_time`,
+            </if>
+      		  <if test="dataObject.delete != null">
+                `is_delete`,
+            </if>
+         </trim>
+         <trim prefix="values (" suffix=")" suffixOverrides=",">
+             <if test="dataObject.id != null">
+                #{dataObject.id},
+            </if>
+      		  <if test="dataObject.lang != null">
+                #{dataObject.lang},
+            </if>
+      		  <if test="dataObject.website != null and dataObject.website != ''">
+                #{dataObject.website},
+            </if>
+      		  <if test="dataObject.terminal != null">
+                #{dataObject.terminal},
+            </if>
+      		  <if test="dataObject.domainName != null and dataObject.domainName != ''">
+                #{dataObject.domainName},
+            </if>
+      		  <if test="dataObject.domainIp != null and dataObject.domainIp != ''">
+                #{dataObject.domainIp},
+            </if>
+      		  <if test="dataObject.createdBy != null">
+                #{dataObject.createdBy},
+            </if>
+      		  <if test="dataObject.createdTime != null">
+                #{dataObject.createdTime},
+            </if>
+      		  <if test="dataObject.updatedBy != null">
+                #{dataObject.updatedBy},
+            </if>
+      		  <if test="dataObject.updatedTime != null">
+                #{dataObject.updatedTime},
+            </if>
+      		  <if test="dataObject.delete != null">
+                #{dataObject.delete},
+            </if>
+         </trim>
+            </foreach>
+        </if>
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update `seo_lang_site_domain`
+        <set>
+            <if test="lang != null">
+                `lang` = #{lang},
+            </if>
+            <if test="website != null and website != ''">
+                `website` = #{website},
+            </if>
+            <if test="terminal != null">
+                `terminal` = #{terminal},
+            </if>
+            <if test="domainName != null and domainName != ''">
+                `domain_name` = #{domainName},
+            </if>
+            <if test="domainIp != null and domainIp != ''">
+                `domain_ip` = #{domainIp},
+            </if>
+            <if test="createdBy != null">
+                `created_by` = #{createdBy},
+            </if>
+            <if test="createdTime != null">
+                `created_time` = #{createdTime},
+            </if>
+            <if test="updatedBy != null">
+                `updated_by` = #{updatedBy},
+            </if>
+            <if test="updatedTime != null">
+                `updated_time` = #{updatedTime},
+            </if>
+            <if test="delete != null">
+                `is_delete` = #{delete},
+            </if>
+        </set>
+        where `id` = #{id}
+    </update>
+
+  <!--批量修改数据-->
+    <update id="updateBatch">
+        <if test="dataObjectList != null and dataObjectList.size > 0">
+             <foreach collection="dataObjectList" item="dataObject" separator=";">
+       		 	update `seo_lang_site_domain`
+        		<set>
+            		<if test="dataObject.lang != null">
+                `lang` = #{dataObject.lang},
+            		</if>
+            		<if test="dataObject.website != null and dataObject.website != ''">
+                `website` = #{dataObject.website},
+            		</if>
+            		<if test="dataObject.terminal != null">
+                `terminal` = #{dataObject.terminal},
+            		</if>
+            		<if test="dataObject.domainName != null and dataObject.domainName != ''">
+                `domain_name` = #{dataObject.domainName},
+            		</if>
+            		<if test="dataObject.domainIp != null and dataObject.domainIp != ''">
+                `domain_ip` = #{dataObject.domainIp},
+            		</if>
+            		<if test="dataObject.createdBy != null">
+                `created_by` = #{dataObject.createdBy},
+            		</if>
+            		<if test="dataObject.createdTime != null">
+                `created_time` = #{dataObject.createdTime},
+            		</if>
+            		<if test="dataObject.updatedBy != null">
+                `updated_by` = #{dataObject.updatedBy},
+            		</if>
+            		<if test="dataObject.updatedTime != null">
+                `updated_time` = #{dataObject.updatedTime},
+            		</if>
+            		<if test="dataObject.delete != null">
+                `is_delete` = #{dataObject.delete},
+            		</if>
+       			</set>
+        			where `id` = #{dataObject.id}
+             </foreach>
+        </if>
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from `seo_lang_site_domain` where `id` = #{id}
+    </delete>
+
+    <!--通过主键集合删除多条数据-->
+    <delete id="deleteByIds">
+       delete from `seo_lang_site_domain`
+       <where>
+           <choose>
+           		<when test="ids != null and ids.size > 0">
+            		`id` in
+            		<foreach collection="ids" item="id" open="(" close=")" separator=",">
+             	 		#{id}
+            		</foreach>
+           		</when>
+           		<otherwise>
+           			1 != 1
+           		</otherwise>
+           </choose>
+       </where>
+    </delete>
+        <!--通过主键逻辑删除数据,0:未删除,1:已删除-->
+    <update id="logicDeleteById">
+        update `seo_lang_site_domain` set `is_delete` = 1 where `id` = #{id}
+    </update>
+
+    <!--通过主键集合逻辑删除数据,0:未删除,1:已删除-->
+    <update id="logicDeleteByIds">
+        update `seo_lang_site_domain` set `is_delete` = 1
+        <where>
+           <choose>
+           		<when test="ids != null and ids.size > 0">
+            		`id` in
+            		<foreach collection="ids" item="id" open="(" close=")" separator=",">
+             	 		#{id}
+            		</foreach>
+           		</when>
+           		<otherwise>
+           			1 != 1
+           		</otherwise>
+           </choose>
+       </where>
+    </update>
+
+    <!--组合条件-->
+    <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="criteriaList" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+
+  <!--通过example查询count-->
+  <select id="countByExample"  resultType="java.lang.Long">
+    select count(*) from `seo_lang_site_domain`
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+
+  <!--通过example删除对象-->
+  <delete id="deleteByExample">
+    delete from `seo_lang_site_domain`
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+
+  <!--通过example查询对象列表-->
+  <select id="queryByExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="BaseColumn" />
+    from `seo_lang_site_domain`
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+</mapper>
